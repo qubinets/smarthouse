@@ -1,0 +1,395 @@
+/* assets/global.css */
+/* Заголовки */
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+/* Примените шрифт к заголовкам или другим элементам */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-left: 30px;
+    font-family: 'Russo One', sans-serif;
+    text-shadow: -1px 0 rgba(0, 0, 0, 0.25), 0 1px rgba(0, 0, 0, 0.25), 1px 0 rgba(0, 0, 0, 0.25), 0 -1px rgba(0, 0, 0, 0.25);
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+h2 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+.btn {
+    border: 2px solid #f3f3f3;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    background-color: #00A0D2;  /* Изменен цвет фона */
+    color: white;  /* Изменен цвет текста */
+    font-weight: bold; /* Исправлено с font-bold на font-weight: bold */
+    padding: 2px 4px; /* Исправлено с py-2 px-4 на padding: 2px 4px */
+    border-radius: 0.25rem; /* Исправлено с rounded на border-radius: 0.25rem */
+    transition: all 0.3s ease-in-out;
+    width: 120px;
+    height: 44px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.btn:hover {
+    @apply bg-blue-700;
+}
+
+.btn-disabled {
+    @apply bg-gray-500 cursor-not-allowed;
+}
+
+.spinner {
+    display: inline-block;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #53a8ec;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+#sensorChart {
+    margin-left: 30px;
+    margin-top: 20px;
+    width: 500px;
+    height: 500px;
+    border: 2px solid #53a8ec;
+}
+#sensorChart {
+    width: 100%;
+    height: 100%;
+}
+.task-view-container{
+    margin-left: 2rem;
+    margin-top: 2rem;
+    width: 450px;
+    height: 500px;
+    border: 1px solid #53a8ec;
+    resize: both;
+    padding: 2rem;
+    overflow: auto;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    align-items: center; /* добавляем выравнивание по центру */
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 10px; /* добавляем отступы слева и справа */
+}
+
+li i {
+    margin-right: 10px; /* добавляем отступ между значком и текстом */
+}
+
+.checkmark {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border: solid #4caf50;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    vertical-align: middle;
+}
+.task-icon-container {
+    width: 20px; /* Задаем ширину контейнера для иконки */
+    margin-right: 10px; /* Добавляем отступ справа */
+}
+
+.check-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #53a8ec;
+    border-radius: 50%;
+    background-color: #53a8ec;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 9"%3E%3Cpath fill="%23fff" d="M3.702 7.844L.907 5.046a.7.7 0 0 1 0-.99l.221-.221a.7.7 0 0 1 .99 0l1.886 1.887 4.264-4.265a.7.7 0 0 1 .99 0l.221.221a.7.7 0 0 1 0 .99L4.692 7.845a.7.7 0 0 1-.99 0z"/%3E%3C/svg%3E');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.task-details-container {
+    margin-right: 20px;
+    flex: 1; /* Растягиваем контейнер на всю оставшуюся ширину */
+}
+
+.status-indicator {
+    text-align: center;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+
+.tasks {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.task-container {
+    display: flex;
+    justify-content: left;
+    margin-left: 30px;
+
+}
+.task-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+.task-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.on {
+    background-color: green;
+}
+.off {
+    background-color: red;
+}
+.mr-2 {
+    margin-right: 0.5rem;
+}
+.ml-6 {
+    margin-left: 1.5rem;
+}
+.sensor-chart-time-range{
+
+    margin-left: 2rem;
+}
+.sensor-chart-container{
+    width: 30vw;
+    height: 15vw;
+}
+.scenario-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+
+
+.delete-btn {
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: red;
+}
+
+/* Перенос строки после каждого пятого элемента */
+.scenario-list > li:nth-child(5n + 1) {
+    clear: both;
+}
+.create-task-container {
+    margin-right: 400px;
+}
+
+.component-container {
+    margin: 0 20px;
+}
+.scenario-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.scenario-title {
+    margin: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.scenario-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.logo-container {
+    position: absolute;
+    top: 0;
+}
+.navbar {
+    padding-top: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #00A0D2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    color: white;
+}
+
+.nav-item {
+    text-align: center;
+    cursor: pointer;
+}
+.container {
+    display: flex;
+}
+
+.content {
+    width: 100%;
+}
+.main-view-container {
+    display: flex;
+}
+
+.main-content {
+    margin-top: 150px;  /* Adjust this according to your header's height */
+    margin-left: 200px; /* Adjust this according to your navbar's width */
+}
+.navbar-header {
+    position: fixed; /* Add this */
+    left: 0; /* Add this */
+    top: 0; /* Add this */
+    width: 100%; /* Change to 100% */
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #5071c9;
+    border-bottom: 1px solid #53a8ec;
+    margin-bottom: 1vw;
+}
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 1rem;
+    margin: 1rem;
+}
+
+.sensor-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.sensor-card h5 {
+    margin-bottom: 0.5rem;
+}
+
+.sensor-card p {
+    margin-top: 0.5rem;
+}
+
+

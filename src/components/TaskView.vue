@@ -1,12 +1,6 @@
 <template>
   <h2>Tasks History</h2>
-  <div id="task-view-container" style=" margin-left: 30px;
-    margin-top: 20px;
-    width: 380px;
-    height: 380px;
-    border: 2px solid #53a8ec;
-    resize: both;
-    overflow: auto;">
+  <div class="task-view-container" id="task-view-container">
     <ul>
       <li v-for="task in tasks" :key="task.id">
         <div class="task-icon-container">

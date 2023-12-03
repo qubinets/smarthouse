@@ -1,30 +1,36 @@
 <template>
-  <div id="sensor-chart-container" style="width: 1000px; height: 500px;">
-    <h2 style="margin-top: 50px">Sensors Data</h2>
-    <div id="sensor-chart-time-range" style="margin-left: 30px">
-      <label>From:</label>
-      <input type="datetime-local" v-model="timeRange.from" @change="fetchData" />
-      <label>To:</label>
-      <input type="datetime-local" v-model="timeRange.to" @change="fetchData" />
+  <div class="main-view-container">
+    <div class="navbar-container">
+      <NavbarView></NavbarView>
     </div>
-    <div style="margin-left: 30px">
-      <br>
-      <input type="checkbox" v-model="selectAll" @change="toggleSelectAll"> Select All
-      <br>
-      <div v-for="sensor in availableSensors" :key="sensor">
-        <input type="checkbox" :id="sensor" :value="sensor" v-model="selectedSensors" @change="fetchData">
-        <label :for="sensor">{{ sensor }}</label>
+    <div class="main-content">
+      <div class="sensors-carts-container">
+        <h2>Data</h2>
+        <SensorsViewCarts @sensor-selected="handleSensorSelected"></SensorsViewCarts>
+      </div>
+      <div class="sensor-chart-container" id="sensor-chart-container" >
+        <h3>Chart</h3>
+        <div class="sensor-chart-time-range" id="sensor-chart-time-range" >
+          <label>From:</label>
+          <input type="datetime-local" v-model="timeRange.from" @change="fetchData" />
+          <label>To:</label>
+          <input type="datetime-local" v-model="timeRange.to" @change="fetchData" />
+        </div>
+        <canvas id="sensorChart"></canvas>
       </div>
     </div>
-    <canvas id="sensorChart"></canvas>
   </div>
 </template>
 
 <script>
 import Chart from "chart.js";
 import axios from "axios";
+import zoomPlugin from 'chartjs-plugin-zoom';
+import NavbarView from "@/components/NavbarView";
+import SensorsViewCarts from "@/components/SensorsViewCarts";
 
 export default {
+  components: {NavbarView, SensorsViewCarts},
   name: "SensorChart",
   data() {
     return {
@@ -35,42 +41,35 @@ export default {
         from: "",
         to: "",
       },
-      availableSensors: [],
       selectedSensors: [],
-      selectAll: false,
     };
   },
   created() {
     const now = new Date();
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
+    // Преобразование в формат datetime-local
     this.timeRange = {
-      from: oneWeekAgo.toISOString(),
-      to: now.toISOString(),
+      from: this.formatDate(oneHourAgo),
+      to: this.formatDate(now),
     };
+
     this.fetchData();
     this.intervalId = setInterval(() => {
-
       this.fetchData();
-    }, 10000);
+    }, 5000);
   },
   beforeUnmount() {
     clearInterval(this.intervalId);
   },
   methods: {
+    formatDate(date) {
+      const dateTimeFormat = new Intl.DateTimeFormat('en', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const [{ value: mo },,{ value: da },,{ value: ye },,{ value: ho },,{ value: mi },,{ value: se }] = dateTimeFormat .formatToParts(date);
+
+      return `${ye}-${mo}-${da}T${ho}:${mi}:${se}`;
+    },
     fetchData() {
-      if (!this.timeRange.from || !this.timeRange.to) {
-        const now = new Date();
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-        this.timeRange = {
-          from: oneWeekAgo.toISOString(),
-          to: now.toISOString(),
-        };
-      }
-
       axios
           .get("/api/sensors", {
             params: {
@@ -81,9 +80,8 @@ export default {
           })
           .then((response) => {
             this.sensors = response.data;
-            this.sensorData = {}; // Сбрасываем объект sensorData перед группировкой новых данных
+            this.sensorData = {}; // Reset sensorData before grouping new data
             this.groupSensors();
-            this.updateAvailableSensors();
             this.renderChart();
           })
           .catch((error) => {
@@ -101,71 +99,100 @@ export default {
         });
       });
     },
-    updateAvailableSensors() {
-      this.availableSensors = Array.from(new Set(this.sensors.map((sensor) => sensor.name)));
-    },
     renderChart() {
       const ctx = document.getElementById("sensorChart").getContext("2d");
+
+      const datasets = Object.entries(this.sensorData)
+          .filter(([label]) => this.selectedSensors.includes(label))
+          .map(([label, data], index) => ({
+            label,
+            data,
+            backgroundColor: "rgba(83,168,236,0.2)",
+            borderColor: "rgb(83,168,236)",
+            borderWidth: 1,
+          }));
+
+      let minValue = Math.min(...this.sensors.map(sensor => sensor.value));
+      let maxValue = Math.max(...this.sensors.map(sensor => sensor.value));
+
       if (this.chart) {
-        this.chart.destroy();
-      }
-      this.chart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: this.sensors.map((sensor) => sensor.timestamp),
-          datasets: Object.entries(this.sensorData)
-              .filter(([label]) => this.selectedSensors.includes(label))
-              .map(([label, data], index) => ({
-                label,
-                data,
-                backgroundColor: `rgba(${index * 50}, ${index * 20}, ${index * 10},
-0.2), borderColor: rgba(${index * 50}, ${index * 20}, ${index * 10}, 1)`,
-                borderWidth: 1,
-              })),
-        },
-        options: {
-          scales: {
-            xAxes: [
-              {
-                type: "time",
-                distribution: "linear",
-                time: {
-                  displayFormats: {
-                    millisecond: "HH:mm:ss",
-                    second: "HH:mm:ss",
-                    minute: "HH:mm",
-                    hour: "HH:mm",
-                    day: "MMM D",
-                    week: "ll",
-                    month: "MMM YYYY",
-                    quarter: "[Q]Q - YYYY",
-                    year: "YYYY",
+        this.chart.data.datasets = datasets;
+        this.chart.update({duration: 0});
+      } else {
+        this.chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: this.sensors.map((sensor) => sensor.timestamp),
+            datasets,
+          },
+          options: {
+            scales: {
+              xAxes: [
+                {
+                  type: "time",
+                  distribution: "linear",
+                  time: {
+                    displayFormats: {
+                      millisecond: "HH:mm:ss",
+                      second: "HH:mm:ss",
+                      minute: "HH:mm",
+                      hour: "HH:mm",
+                      day: "MMM D",
+                      week: "ll",
+                      month: "MMM YYYY",
+                      quarter: "[Q]Q - YYYY",
+                      year: "YYYY",
+                    },
                   },
                 },
-              },
-            ],
-            yAxes: [
-              {
-                position: "right",
-                ticks: {
-                  beginAtZero: true,
+              ],
+              yAxes: [
+                {
+                  position: "right",
+                  ticks: {
+                    beginAtZero: false,
+                    suggestedMin: minValue,
+                    suggestedMax: maxValue
+                  },
                 },
+              ],
+              legend: {
+                position: "left",
               },
-            ],
+            },
+            plugins: {
+              zoom: {
+                // Container for pan options
+                pan: {
+                  // Boolean to enable panning
+                  enabled: true,
+
+                  // Panning directions. Remove the appropriate direction to disable
+                  // Eg. 'y' would only allow panning in the y direction
+                  mode: 'xy'
+                },
+
+                // Container for zoom options
+                zoom: {
+                  // Boolean to enable zooming
+                  enabled: true,
+
+                  // Zooming directions. Remove the appropriate direction to disable
+                  // Eg. 'y' would only allow zooming in the y direction
+                  mode: 'xy',
+                }
+              }
+            }
           },
-          legend: {
-            position: "left",
-          },
-        },
-      });
-    },
-    toggleSelectAll() {
-      if (this.selectAll) {
-        this.selectedSensors = [...this.availableSensors];
-      } else {
-        this.selectedSensors = [];
+        });
       }
+    },
+
+    handleSensorSelected(sensorName) {
+      this.selectedSensors = [sensorName];
       this.fetchData();
+      this.chart.resetZoom();
+      this.chart.update();
     },
   },
 };

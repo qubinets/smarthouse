@@ -1,10 +1,7 @@
 package com.example.smarthouse.Controllers;
 
-import com.example.smarthouse.Models.Status;
-import com.example.smarthouse.Models.Task;
 import com.example.smarthouse.Models.TaskState;
-import com.example.smarthouse.TaskRepository;
-import com.example.smarthouse.TaskStateRepository;
+import com.example.smarthouse.Repo.TaskStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class TaskStateController {
@@ -40,4 +38,11 @@ public class TaskStateController {
         taskStateRepository.save(task);
         return ResponseEntity.ok("Task state updated.");
     }
+    @GetMapping("/tasks/state/names")
+    public List<String> getTaskStateNames() {
+        List<TaskState> taskStates = taskStateRepository.findAll();
+        List<String> taskStateNames = taskStates.stream().map(TaskState::getTaskName).collect(Collectors.toList());
+        return taskStateNames;
+    }
+
 }

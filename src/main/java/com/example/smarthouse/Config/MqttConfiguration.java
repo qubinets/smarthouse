@@ -5,15 +5,9 @@ import com.example.smarthouse.Models.Status;
 import com.example.smarthouse.Models.Task;
 import com.example.smarthouse.Models.TaskState;
 import com.example.smarthouse.Service.SensorService;
-import com.example.smarthouse.TaskRepository;
-import com.example.smarthouse.TaskStateRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.eclipse.paho.client.mqttv3.MqttClient;
+import com.example.smarthouse.Repo.TaskRepository;
+import com.example.smarthouse.Repo.TaskStateRepository;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +17,6 @@ import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
-import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.MessageChannel;
@@ -31,8 +24,6 @@ import org.springframework.messaging.MessageHandler; // Замените это�
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 import java.util.*;

@@ -3,7 +3,7 @@ package com.example.smarthouse.Controllers;
 import com.example.smarthouse.Models.Status;
 import com.example.smarthouse.Models.Task;
 import com.example.smarthouse.Service.TaskService;
-import com.example.smarthouse.TaskRepository;
+import com.example.smarthouse.Repo.TaskRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import java.util.List;
 

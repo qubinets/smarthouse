@@ -1,9 +1,9 @@
 package com.example.smarthouse.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class Condition {
@@ -12,26 +12,70 @@ public class Condition {
     private Long id;
     private String sensorName;
     private Float value;
-    private Comparator comparator; // LESS_THAN, GREATER_THAN, EQUALS,NOT
+    @Column(name = "expected_state")
+    private String expectedState;
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scenario_id")
+    private Scenario scenario;
 
-    public enum Comparator {
-        AND ,
-        OR,
-        NOT,
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    @JsonBackReference
+    private TaskState state;
+
+    @Enumerated(EnumType.STRING)
+    private ValueComparator valueComparator; // LESS_THAN, GREATER_THAN, EQUALS,NOT
+
+    @Enumerated(EnumType.STRING)
+    private StateComparator stateComparator; // LESS_THAN, GREATER_THAN, EQUALS,NOT
+
+
+    public enum ValueComparator {
         LESS_THAN,
         GREATER_THAN,
         EQUALS,
-
-
+    }
+    public enum StateComparator {
+        EQUALS,
+        NOT_EQUALS,
     }
     public Condition() {
 
     }
 
-    public Condition(String sensorName, Float value, Comparator comparator) {
+    public Condition(String sensorName, Float value, Scenario scenario, TaskState state, ValueComparator valueComparator, StateComparator stateComparator, String expectedState) {
         this.sensorName = sensorName;
         this.value = value;
-        this.comparator = comparator;
+        this.scenario = scenario;
+        this.state = state;
+        this.valueComparator = valueComparator;
+        this.stateComparator = stateComparator;
+        this.expectedState = expectedState;
+    }
+
+    public TaskState getState() {
+        return state;
+    }
+
+    public void setState(TaskState state) {
+        this.state = state;
+    }
+
+    public StateComparator getStateComparator() {
+        return stateComparator;
+    }
+
+    public void setStateComparator(StateComparator stateComparator) {
+        this.stateComparator = stateComparator;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
     }
 
     public Long getId() {
@@ -58,11 +102,19 @@ public class Condition {
         this.value = value;
     }
 
-    public Comparator getComparator() {
-        return comparator;
+    public ValueComparator getValueComparator() {
+        return valueComparator;
     }
 
-    public void setComparator(Comparator comparator) {
-        this.comparator = comparator;
+    public void setValueComparator(ValueComparator comparator) {
+        this.valueComparator = comparator;
+    }
+    // Создайте геттеры и сеттеры для expectedState
+    public String getExpectedState() {
+        return expectedState;
+    }
+
+    public void setExpectedState(String expectedState) {
+        this.expectedState = expectedState;
     }
 }

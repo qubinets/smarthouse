@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class WebController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/sensors", "/scenario"})
     public String index() {
         return "index";
     }
+
+
 }

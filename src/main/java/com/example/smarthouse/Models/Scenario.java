@@ -1,5 +1,7 @@
 package com.example.smarthouse.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -10,21 +12,18 @@ public class Scenario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private Command command;
+    @OneToOne(mappedBy = "scenario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Condition condition;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Condition> conditions;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Action> actions;
-
-    public Scenario(){
+    public Scenario() {
 
     }
 
-    public Scenario(String name, Set<Condition> conditions, Set<Action> actions) {
+    public Scenario(String name, Command command, Condition condition) {
         this.name = name;
-        this.conditions = conditions;
-        this.actions = actions;
+        this.command = command;
+        this.condition = condition;
     }
 
     public Long getId() {
@@ -43,19 +42,19 @@ public class Scenario {
         this.name = name;
     }
 
-    public Set<Condition> getConditions() {
-        return conditions;
+    public Command getCommand() {
+        return command;
     }
 
-    public void setConditions(Set<Condition> conditions) {
-        this.conditions = conditions;
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
-    public Set<Action> getActions() {
-        return actions;
+    public Condition getCondition() {
+        return condition;
     }
 
-    public void setActions(Set<Action> actions) {
-        this.actions = actions;
+    public void setCondition(Condition condition) {
+        this.condition = condition;
     }
 }

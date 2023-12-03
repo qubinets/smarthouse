@@ -1,6 +1,7 @@
 package com.example.smarthouse;
 
 import com.example.smarthouse.Models.TaskState;
+import com.example.smarthouse.Repo.TaskStateRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

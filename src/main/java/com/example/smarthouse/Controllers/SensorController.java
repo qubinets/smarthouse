@@ -16,7 +16,10 @@ public class SensorController {
 
     @Autowired
     private SensorService sensorService;
-
+    @GetMapping("/names")
+    public List<String> getAllSensorsNames() {
+        return sensorService.getAllSensorNames();
+    }
 
     @GetMapping
     public List<Sensor> getAllSensors(
@@ -24,6 +27,10 @@ public class SensorController {
             @RequestParam(required = false) String to,
             @RequestParam(required = false) List<String> sensors) {
         return sensorService.findFilteredSensors(from, to, sensors);
+    }
+    @GetMapping("/all")
+    public List<Sensor> getAllSensorsList(){
+        return sensorService.findAll();
     }
 
     @PostMapping
